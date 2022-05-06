@@ -6,12 +6,11 @@ import '@/config/element.config';
 import openModal  from './utils/Dialog';
 Vue.prototype.$openModal = openModal;
 // 引入全局组件
-const styles = import.meta.glob("/src/components/global/**.js");
-Object.keys(styles).forEach((key) => {
-    console.log(key, styles[key]());
-    styles[key]().then((mod) => {
-        const file = key.split('/').pop().replace(/.js$/, '');
-        Vue.component(file, mod[file]);
+const modules = import.meta.glob("/src/components/global/**");
+Object.keys(modules).forEach((key) => {
+    modules[key]().then((mod) => {
+        const file = key.split('/').pop().replace(/.js$/, '').replace(/.vue$/, '');
+        Vue.component(file, mod.default || mod[file]);
     });
 });
 new Vue({
